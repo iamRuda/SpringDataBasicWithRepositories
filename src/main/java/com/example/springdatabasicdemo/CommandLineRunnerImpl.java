@@ -33,20 +33,37 @@ public class CommandLineRunnerImpl implements CommandLineRunner {
     public void run(String... args) throws Exception {
         seedData();
 
-        bikeRepository.findAll().forEach(System.out::println);
-        carRepository.findAll().forEach(System.out::println);
-        planeRepository.findAll().forEach(System.out::println);
-        truckRepository.findAll().forEach(System.out::println);
+
+        updateBikeFuelType(1, "Kerosin");
+        deleteBikeById(2);
+        printAllBike();
     }
+
+    private void printAllBike() {bikeRepository.findAll().forEach(System.out::println);}
+
+    private void updateBikeFuelType (int idBike, String fuelType){
+        Bike bike = bikeRepository.findById(idBike);
+        bike.setFuelType(new String(fuelType));
+        bikeRepository.save(bike);
+    }
+
+    private void deleteBikeById(int idBike){
+        Bike bike = bikeRepository.findById(idBike);
+        bikeRepository.delete(bike);
+    }
+
+
 
     private void seedData() throws IOException {
         // Добавление в БД записей
         Bike bike = new Bike("R1", BigDecimal.valueOf(300.49), "Oil");
+        Bike another_bike = new Bike("H1", BigDecimal.valueOf(530.29), "Electro");
         Car car = new Car("GT300", BigDecimal.valueOf(5300.01), "Petrol-100", 4);
         Plane plane = new Plane("AirSoft", BigDecimal.valueOf(50000.34), "Kerosin", "S9", 12);
         Truck truck = new Truck("Kamaz", BigDecimal.valueOf(3145.12), "Disel", 4.25);
 
         bikeRepository.save(bike);
+        bikeRepository.save(another_bike);
         carRepository.save(car);
         planeRepository.save(plane);
         truckRepository.save(truck);
